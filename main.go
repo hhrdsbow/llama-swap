@@ -18,7 +18,7 @@ var (
 func main() {
 	var (
 		configFile  = flag.String("config", "config.yaml", "path to configuration file")
-		listenAddr  = flag.String("listen", ":8080", "address to listen on")
+		listenAddr  = flag.String("listen", ":11434", "address to listen on")
 		showVersion = flag.Bool("version", false, "print version information and exit")
 		logLevel    = flag.String("log-level", "info", "log level (debug, info, warn, error)")
 	)
