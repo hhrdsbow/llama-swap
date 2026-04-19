@@ -18,9 +18,9 @@ var (
 func main() {
 	var (
 		configFile  = flag.String("config", "config.yaml", "path to configuration file")
-		listenAddr  = flag.String("listen", ":11434", "address to listen on") // use ollama's default port
+		listenAddr  = flag.String("listen", ":8080", "address to listen on") // changed from :11434 to avoid conflict with local ollama
 		showVersion = flag.Bool("version", false, "print version information and exit")
-		logLevel    = flag.String("log-level", "info", "log level (debug, info, warn, error)")
+		logLevel    = flag.String("log-level", "debug", "log level (debug, info, warn, error)") // default to debug for easier local dev
 	)
 	flag.Parse()
 
