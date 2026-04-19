@@ -36,6 +36,7 @@ func main() {
 
 	log.Printf("llama-swap %s starting", version)
 	log.Printf("loading config from: %s", *configFile)
+	log.Printf("log level: %s", *logLevel)
 
 	cfg, err := proxy.LoadConfig(*configFile)
 	if err != nil {
