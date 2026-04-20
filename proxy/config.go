@@ -14,6 +14,7 @@ type Config struct {
 	LogLevel string `yaml:"logLevel"`
 
 	// HealthCheckTimeout is how long to wait for a model process to become ready.
+	// Defaults to 30s if not specified.
 	HealthCheckTimeout Duration `yaml:"healthCheckTimeout"`
 
 	// Models is a map of model name to model configuration.
@@ -92,6 +93,9 @@ func LoadConfig(path string) (*Config, error) {
 		return nil, fmt.Errorf("parsing config file: %w", err)
 	}
 
+	// Apply defaults before validation.
+	cfg.applyDefaults()
+
 	if err := cfg.Validate(); err != nil {
 		return nil, fmt.Errorf("invalid config: %w", err)
 	}
@@ -99,27 +103,16 @@ func LoadConfig(path string) (*Config, error) {
 	return &cfg, nil
 }
 
+// applyDefaults fills in sensible defaults for fields that were not set.
+func (c *Config) applyDefaults() {
+	if c.LogLevel == "" {
+		c.LogLevel = "info"
+	}
+	if c.HealthCheckTimeout.Duration == 0 {
+		c.HealthCheckTimeout.Duration = 30 * time.Second
+	}
+}
+
 // Validate performs basic sanity checks on the configuration.
 func (c *Config) Validate() error {
-	for name, model := range c.Models {
-		if model.Cmd == "" {
-			return fmt.Errorf("model %q: cmd must not be empty", name)
-		}
-		if model.Proxy == "" {
-			return fmt.Errorf("model %q: proxy must not be empty", name)
-		}
-	}
-
-	for groupName, group := range c.Groups {
-		if len(group.Members) == 0 {
-			return fmt.Errorf("group %q: members must not be empty", groupName)
-		}
-		for _, member := range group.Members {
-			if _, ok := c.Models[member]; !ok {
-				return fmt.Errorf("group %q: member %q is not a defined model", groupName, member)
-			}
-		}
-	}
-
-	return nil
-}
+	fo
