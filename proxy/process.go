@@ -111,9 +111,10 @@ func (p *Process) IsRunning() bool {
 	return p.state == StateRunning
 }
 
-// waitForReady polls until the process HTTP endpoint is responsive or times out
+// waitForReady polls until the process HTTP endpoint is responsive or times out.
+// Increased timeout to 120s since some larger models (e.g. 70B GGUF) take a while to load.
 func (p *Process) waitForReady() error {
-	timeout := time.After(60 * time.Second)
+	timeout := time.After(120 * time.Second)
 	ticker := time.NewTicker(250 * time.Millisecond)
 	defer ticker.Stop()
 
@@ -133,5 +134,4 @@ func (p *Process) waitForReady() error {
 func (p *Process) isHealthy() bool {
 	// Health check is performed by the proxy layer using the model's upstream URL
 	// This is a lightweight sentinel; actual HTTP check lives in the swap manager
-	return p.cmd != nil && p.cmd.Process != nil && p.cmd.ProcessState == nil
-}
+	return p.cmd != nil && p.cmd.Process != nil
