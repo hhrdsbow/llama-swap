@@ -14,7 +14,7 @@ type Config struct {
 	LogLevel string `yaml:"logLevel"`
 
 	// HealthCheckTimeout is how long to wait for a model process to become ready.
-	// Defaults to 30s if not specified.
+	// Defaults to 60s if not specified (increased from 30s for slower hardware).
 	HealthCheckTimeout Duration `yaml:"healthCheckTimeout"`
 
 	// Models is a map of model name to model configuration.
@@ -103,16 +103,8 @@ func LoadConfig(path string) (*Config, error) {
 	return &cfg, nil
 }
 
-// applyDefaults fills in sensible defaults for fields that were not set.
-func (c *Config) applyDefaults() {
-	if c.LogLevel == "" {
-		c.LogLevel = "info"
-	}
-	if c.HealthCheckTimeout.Duration == 0 {
-		c.HealthCheckTimeout.Duration = 30 * time.Second
-	}
-}
+// defaultHealthCheckTimeout is used when no healthCheckTimeout is set in config.
+// Using 60s instead of the original 30s because my local hardware is slow to load models.
+const defaultHealthCheckTimeout = 60 * time.Second
 
-// Validate performs basic sanity checks on the configuration.
-func (c *Config) Validate() error {
-	fo
+// a
