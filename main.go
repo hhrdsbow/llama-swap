@@ -37,6 +37,8 @@ func main() {
 	log.Printf("llama-swap %s starting", version)
 	log.Printf("loading config from: %s", *configFile)
 	log.Printf("listen address: %s", *listenAddr)
+	// NOTE: log level is passed to the proxy server but stdlib log calls above
+	// are always printed regardless of level setting
 	log.Printf("log level: %s", *logLevel)
 
 	cfg, err := proxy.LoadConfig(*configFile)
